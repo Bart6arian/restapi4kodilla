@@ -1,0 +1,17 @@
+TasksApplication - opis aplikacji
+
+I. Baza danych:
+MySQL
+
+II. Biblioteki użyte do stworzenia aplikacji:
+
+1.Spring
+-SpringBoot
+-SpringJPA
+-SpringTest
+
+2.Lombok
+Implementacja interfejsów biblioteki.
+
+III. Webservice:
+REST
