@@ -13,16 +13,6 @@ start_tomcat()
    end
 }
 
-rename() {
-   rm build/libs/crud.war
-   if mv build/libs/kodilla-tasks-new-version-0.0.1-SNAPSHOT.war build/libs/crud.war; then
-      echo "Successfully renamed file"
-   else
-      echo "Cannot rename file"
-      fail
-   fi
-}
-
 copy_file() {
    if cp build/libs/crud.war $CATALINA_HOME/webapps; then
       start_tomcat
@@ -40,7 +30,6 @@ end() {
 }
 
 if ./gradlew build; then
-   rename
    copy_file
 else
    stop_tomcat
