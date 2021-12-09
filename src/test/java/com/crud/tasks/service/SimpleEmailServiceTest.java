@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class SimpleEmailServiceTest {
 
-    /*@InjectMocks
+    @InjectMocks
     private SimpleEmailService simpleEmailService;
 
     @Mock
@@ -42,6 +42,6 @@ class SimpleEmailServiceTest {
 
         //then
         verify(javaMailSender, times(1)).send(mailMessage);
-    }*/
+    }
 
 }
