@@ -1,6 +1,7 @@
 package com.crud.tasks.facade;
 
 import com.crud.tasks.domain.*;
+import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.validator.TrelloValidator;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ public class TrelloFacadeTestSuite {
 
     TrelloMapper mapper = new TrelloMapper();
     TrelloValidator validator = new TrelloValidator();
+    TaskMapper taskMapper = new TaskMapper();
 
 
     private List<TrelloList> fillList() {
@@ -35,6 +37,14 @@ public class TrelloFacadeTestSuite {
             listDtos.add(new TrelloListDto("id"+l, "Name"+l, b));
         }
         return listDtos;
+    }
+
+    private List<Task> taskList() {
+        List<Task> tasks = new ArrayList<>();
+        for(long t = 0l; t <= 4; t++) {
+            tasks.add(new Task(t, "title#"+t, "content#"+t));
+        }
+        return tasks;
     }
 
     @Test
@@ -84,5 +94,35 @@ public class TrelloFacadeTestSuite {
                 ()-> assertEquals(trelloCardDto.getName(), card.getName()),
                 ()-> assertEquals("11", trelloCardDto.getListId())
         );
+    }
+
+    @Test
+    void testMapToTask() {
+        //given
+        TaskDto taskDto = new TaskDto(2L, "exampleTitle", "Content 2");
+        //when
+        Task task = taskMapper.mapToTask(taskDto);
+        //then
+        assertEquals(2L, task.getId());
+    }
+
+    @Test
+    void testMapToTaskDto() {
+        //given
+        Task task = new Task(2L, "exampleTitle", "Content 2");
+        //when
+        TaskDto taskDto = taskMapper.mapToTaskDto(task);
+        //then
+        assertEquals(2L, task.getId());
+    }
+
+    @Test
+    void testMapToTaskDtoList() {
+        //given
+        List<Task> tasks = taskList();
+        //when
+        List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(tasks);
+        //then
+        assertFalse(taskDtos.isEmpty());
     }
 }
