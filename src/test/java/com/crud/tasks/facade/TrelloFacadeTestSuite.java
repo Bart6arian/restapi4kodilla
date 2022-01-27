@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,53 +48,15 @@ public class TrelloFacadeTestSuite {
         return tasks;
     }
 
-    @Test
-    void testMapToDtoBothListAndBoard() {
-        //given
-        List<TrelloList> trelloLists = fillList();
-        TrelloBoard board = new TrelloBoard("ToDo", "1432", trelloLists);
-        //when
-        TrelloBoardDto trelloBoardDto = mapper.mapToTrelloBoardDto(board);
-        //then
-        assertAll(
-                ()-> assertEquals(board.getName(), trelloBoardDto.getName()),
-                ()-> assertFalse(trelloBoardDto.getLists().isEmpty()));
-    }
-
-    @Test
-    void testMapToListAndBoard() {
-        //given
-        List<TrelloListDto> trelloListsDto = fillListWithDtos();
-        TrelloBoardDto boardDto = new TrelloBoardDto("Done", "2254", trelloListsDto);
-        //when
-        TrelloBoard board = mapper.mapToTrelloBoard(boardDto);
-        //then
-        assertAll(
-                ()-> assertEquals(boardDto.getName(), board.getName()),
-                ()-> assertEquals(6, board.getLists().size()));
-    }
-
-    @Test
-    void testMapToCard() {
-        //given
-        TrelloCardDto cardDto = new TrelloCardDto("Example", "smth", "3", "5");
-        //when
-        TrelloCard card = mapper.mapToCard(cardDto);
-        //then
-        assertSame(card.getPos(), cardDto.getPos());
-    }
-
-    @Test
-    void testMapToCardDto() {
-        //given
-        TrelloCard card = new TrelloCard("Example", "smthNew", "5", "11");
-        //when
-        TrelloCardDto trelloCardDto = mapper.mapToCardDto(card);
-        //then
-        assertAll(
-                ()-> assertEquals(trelloCardDto.getName(), card.getName()),
-                ()-> assertEquals("11", trelloCardDto.getListId())
-        );
+    private List<TrelloBoard> fillListWithTrelloBoards() {
+        List<TrelloBoard> boards = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            boards.add(new TrelloBoard("name#"+i, "id#"+i, fillList()));
+            if(i == 2) {
+                boards.add(new TrelloBoard("test", "test id", fillList()));
+            }
+        }
+        return boards;
     }
 
     @Test
@@ -124,5 +87,114 @@ public class TrelloFacadeTestSuite {
         List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(tasks);
         //then
         assertFalse(taskDtos.isEmpty());
+    }
+
+    @Test
+    void testMapToCard() {
+        //given
+        TrelloCardDto cardDto = new TrelloCardDto("Example", "smth", "3", "5");
+        //when
+        TrelloCard card = mapper.mapToCard(cardDto);
+        //then
+        assertSame(card.getPos(), cardDto.getPos());
+    }
+
+    @Test
+    void testMapToCardDto() {
+        //given
+        TrelloCard card = new TrelloCard("Example", "smthNew", "5", "11");
+        //when
+        TrelloCardDto trelloCardDto = mapper.mapToCardDto(card);
+        //then
+        assertAll(
+                ()-> assertEquals(trelloCardDto.getName(), card.getName()),
+                ()-> assertEquals("11", trelloCardDto.getListId())
+        );
+    }
+
+    @Test
+    void testMapTrelloListToItsDto() {
+        //given
+        List<TrelloList> trelloLists = fillList();
+        //when
+        List<TrelloListDto> trelloListDtos = mapper.mapToTrelloListDto(trelloLists);
+        //then
+        assertAll(
+                ()-> assertEquals(trelloLists.get(0).getName(), trelloListDtos.get(0).getName()),
+                ()-> assertEquals(trelloLists.size(), trelloListDtos.size()),
+                ()-> assertFalse(trelloListDtos.isEmpty())
+        );
+    }
+
+    @Test
+    void testMapListTrelloDtoToTrelloList() {
+        //given
+        List<TrelloListDto> trelloListDtos = fillListWithDtos();
+        //when
+        List<TrelloList> trelloLists = mapper.mapToList(trelloListDtos);
+        //then
+        assertAll(
+                ()-> assertFalse(trelloListDtos.isEmpty()),
+                ()-> assertEquals(trelloLists.size(), trelloListDtos.size())
+        );
+    }
+
+    @Test
+    void testMapBoardToBoardDto() {
+        //given
+        List<TrelloList> trelloLists = fillList();
+        TrelloBoard board = new TrelloBoard("ToDo", "1432", trelloLists);
+        //when
+        TrelloBoardDto trelloBoardDto = mapper.mapToTrelloBoardDto(board);
+        //then
+        assertAll(
+                ()-> assertEquals(board.getName(), trelloBoardDto.getName()),
+                ()-> assertFalse(trelloBoardDto.getLists().isEmpty()));
+    }
+
+    @Test
+    void testMapBoardDtoToBoard() {
+        //given
+        List<TrelloListDto> trelloListsDto = fillListWithDtos();
+        TrelloBoardDto boardDto = new TrelloBoardDto("Done", "2254", trelloListsDto);
+        //when
+        TrelloBoard board = mapper.mapToTrelloBoard(boardDto);
+        //then
+        assertAll(
+                ()-> assertEquals(boardDto.getName(), board.getName()),
+                ()-> assertEquals(6, board.getLists().size()));
+    }
+
+    @Test
+    void testIfValidatorDoesItsJob() {
+        //given
+        TrelloCard card = new TrelloCard("testForCheck", "smthNew", "5", "11");
+        TrelloCard card2 = new TrelloCard("card", "smthSmth", "4", "10");
+        //when
+        validator.validateCard(card);
+        validator.validateCard(card2);
+        //then
+        assertAll(
+                ()-> assertTrue(card.getName().contains("test")),
+                ()-> assertNotSame(card2.getListId(), card.getListId())
+        );
+    }
+
+    @Test
+    void testValidateTrelloBoards() {
+        //given
+        List<TrelloBoard> trelloBoards = fillListWithTrelloBoards();
+        //when
+        List<TrelloBoard> trelloBoardsToValidate = validator.validateTrelloBoards(trelloBoards);
+        List<TrelloBoard> casted =
+                trelloBoardsToValidate.stream()
+                        .filter(b -> b.getName().equals("test"))
+                        .collect(Collectors.toList());
+        //then
+        assertAll(
+                ()-> assertEquals(5, trelloBoardsToValidate.size()),
+                ()-> assertEquals(6, trelloBoardsToValidate.get(0).getLists().size()),
+                ()-> assertTrue(casted.isEmpty())
+        );
     }
 }
