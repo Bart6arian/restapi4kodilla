@@ -10,7 +10,7 @@ import lombok.Getter;
 @Builder
 public class TaskDto {
 
-    private Long id;
+    private Long taskId;
     private String title;
     private String content;
 }

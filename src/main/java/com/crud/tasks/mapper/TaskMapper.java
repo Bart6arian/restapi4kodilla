@@ -12,7 +12,7 @@ public class TaskMapper {
 
     public Task mapToTask(final TaskDto taskDto) {
         return new Task(
-                taskDto.getId(),
+                taskDto.getTaskId(),
                 taskDto.getTitle(),
                 taskDto.getContent()
         );
@@ -29,6 +29,12 @@ public class TaskMapper {
     public List<TaskDto> mapToTaskDtoList(final List<Task> taskList) {
         return taskList.stream()
                 .map(this::mapToTaskDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<Task> mapToTaskList(final List<TaskDto> dtos) {
+        return dtos.stream()
+                .map(this::mapToTask)
                 .collect(Collectors.toList());
     }
 }
