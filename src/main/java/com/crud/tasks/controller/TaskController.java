@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class TaskController {
 
     private final DbService dbService;
