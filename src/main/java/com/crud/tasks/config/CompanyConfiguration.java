@@ -17,6 +17,6 @@ public class CompanyConfiguration {
     @Value("${info.app.company.email}")
     private String companyMail;
 
-    @Value("${info.app.company.phon}")
+    @Value("${info.app.company.phone}")
     private int companyPhone;
 }

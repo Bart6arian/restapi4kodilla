@@ -67,7 +67,7 @@ class TaskControllerTest {
         //then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/v1/task/createTask")
+                        .post("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(s))
                 .andExpect(status().is(200));
@@ -86,7 +86,7 @@ class TaskControllerTest {
         //then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/task/getTask")
+                        .get("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("id", "2")
                         .content(s)).andDo(print())
@@ -110,7 +110,7 @@ class TaskControllerTest {
         mockMvc
                 .perform(
                         MockMvcRequestBuilders
-                            .get("/v1/task/getTasks")
+                            .get("/v1/tasks")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(s)).andDo(print())
                 .andExpect(status().is(200))
@@ -130,7 +130,7 @@ class TaskControllerTest {
         mockMvc
                 .perform(
                     MockMvcRequestBuilders
-                            .delete("/v1/task/deleteTask")
+                            .delete("/v1/tasks")
                             .param("id", "2")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(s)).andDo(print())
@@ -151,7 +151,7 @@ class TaskControllerTest {
         mockMvc
                 .perform(
                         MockMvcRequestBuilders
-                                .put("/v1/task/updateTask")
+                                .put("/v1/tasks")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(s)).andDo(print())
                 .andExpect(status().is(200));
