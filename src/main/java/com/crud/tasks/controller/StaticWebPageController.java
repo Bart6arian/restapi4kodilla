@@ -16,6 +16,6 @@ public class StaticWebPageController {
         model.put("thirdOperation", "2 - 2 * 2 = ");
         model.put("two", 2);
         model.put("three", 3);
-        return "index";
+        return "exercise";
     }
 }
