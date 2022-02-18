@@ -4,25 +4,22 @@ import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.validator.TrelloValidator;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class TrelloFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloFacade.class);
 
-    private TrelloService trelloService;
-
-    @Autowired
-    private TrelloMapper trelloMapper;
-
-    @Autowired
-    private TrelloValidator trelloValidator;
+    private final TrelloService trelloService;
+    private final TrelloMapper trelloMapper;
+    private final TrelloValidator trelloValidator;
 
     public List<TrelloBoardDto> fetchAllTrelloBoards() {
         List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloService.fetchTrelloBoards());
