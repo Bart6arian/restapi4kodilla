@@ -52,7 +52,11 @@ public class TrelloMapper {
 
     public List<TrelloListDto> mapToTrelloListDto(final List<TrelloList> trelloList) {
         return trelloList.stream()
-                .map(this::mapToTrelloListDto)
+                .map(trelloLists -> new TrelloListDto(
+                        trelloLists.getId(),
+                        trelloLists.getName(),
+                        trelloLists.isClosed()
+        ))
                 .collect(Collectors.toList());
     }
 
