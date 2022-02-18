@@ -18,12 +18,12 @@ public class TrelloController {
 
     private final TrelloFacade trelloFacade;
 
-    @GetMapping("boards")
+    @GetMapping("/boards")
     public List<TrelloBoardDto> getTrelloBoards() {
         return trelloFacade.fetchAllTrelloBoards();
     }
 
-    @PostMapping("cards")
+    @PostMapping("/cards")
     public CreatedTrelloCardDto createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
         return trelloFacade.createCard(trelloCardDto);
     }
